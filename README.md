@@ -2,7 +2,7 @@
 
 An interactive, single-page tribute website celebrating **80 years of India's Independence**. Built to walk visitors through the freedom struggle — from the first uprising in 1857 to the midnight of 15 August 1947 — through a clean, tricolour-inspired design.
 
-**🔗 Live Website:** [Add your live link here](https://independence-self.vercel.app/)
+**🔗 Live Website:** [Independence Day](https://independence-self.vercel.app/)
 
 ---
 
