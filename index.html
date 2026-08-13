@@ -111,6 +111,39 @@
     .creator-badge{ display:none; }
   }
 
+  /* ---------------- Language switch ---------------- */
+  .lang-switch{
+    display:flex; align-items:center; gap:2px;
+    border:1px solid var(--line); border-radius:999px; padding:3px;
+    background:var(--paper-dim); margin-left:16px; flex:none;
+  }
+  .lang-btn{
+    border:none; background:transparent; cursor:pointer;
+    font-family:'Rajdhani', sans-serif; font-weight:700; font-size:0.72rem;
+    letter-spacing:0.05em; padding:6px 13px; border-radius:999px;
+    color:var(--ink-soft); transition:background 0.2s ease, color 0.2s ease;
+  }
+  .lang-btn.active{ background:var(--green-deep); color:#fff; }
+  .lang-btn:hover:not(.active){ color:var(--green-deep); }
+
+  /* ---------------- Social links (footer) ---------------- */
+  .social-links{
+    display:flex; align-items:center; justify-content:center; gap:14px;
+    margin-top:18px;
+  }
+  .social-links a{
+    display:flex; align-items:center; justify-content:center;
+    width:38px; height:38px; border-radius:50%;
+    background:rgba(255,252,246,0.08); border:1px solid rgba(255,252,246,0.18);
+    color:rgba(255,252,246,0.85);
+    transition:background 0.2s ease, color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+  }
+  .social-links a:hover, .social-links a:focus-visible{
+    background:var(--saffron-deep); border-color:var(--saffron-deep); color:#fff;
+    transform:translateY(-3px);
+  }
+  .social-links svg{ width:18px; height:18px; display:block; fill:currentColor; }
+
   /* ---------------- Hero ---------------- */
   .hero{
     position:relative;
@@ -206,11 +239,6 @@
     font-family:'Rajdhani',sans-serif; font-weight:700; font-size:1.1rem;
     color:var(--saffron-deep); position:relative;
   }
-  .tl-year::after{
-    content:''; position:absolute; right:-33px; top:6px; width:10px; height:10px;
-    border-radius:50%; background:var(--paper-dim); border:2px solid var(--chakra);
-  }
-  @media (max-width:640px){ .tl-year::after{ right:-33px; } }
   .tl-item h3{ font-size:1.25rem; margin-bottom:6px; }
   .tl-item p{ margin:0; font-size:0.98rem; }
 
@@ -259,17 +287,11 @@
     width:96px; height:96px; margin:0 auto 14px;
     position:relative;
   }
-  .hero-photo-wrap::before{
-    content:''; position:absolute; inset:-4px; border-radius:50%;
-    padding:4px; background:conic-gradient(var(--saffron), #fff, var(--green), var(--chakra), var(--saffron));
-    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite:xor; mask-composite:exclude;
-    animation:spin 14s linear infinite;
-  }
   .hero-photo{
     width:100%; height:100%; border-radius:50%; object-fit:cover;
-    position:relative; z-index:1; display:block;
+    display:block;
     border:3px solid #fff;
+    box-shadow:0 0 0 1px var(--line);
     filter: grayscale(20%) contrast(1.05);
     transition:filter 0.3s ease;
   }
@@ -419,7 +441,7 @@
     animation:popIn 0.4s ease both;
   }
   @keyframes popIn{ from{ opacity:0; transform:scale(0.85) translateY(10px);} to{ opacity:1; transform:scale(1) translateY(0);} }
-  .note span{ display:block; margin-top:auto; font-family:'Rajdhani',sans-serif; font-size:0.72rem; font-weight:700; letter-spacing:0.06em; opacity:0.65; text-transform:uppercase; }
+  .note .note-author{ display:block; margin-top:auto; font-family:'Rajdhani',sans-serif; font-size:0.72rem; font-weight:700; letter-spacing:0.06em; opacity:0.65; text-transform:uppercase; }
   .note.c1{ background:#FFE3B8; transform:rotate(-2deg); }
   .note.c2{ background:#FFFFFF; border:1px solid var(--line); transform:rotate(1.5deg); }
   .note.c3{ background:#D9F2CF; transform:rotate(-1deg); }
@@ -456,27 +478,31 @@
   <header class="site" id="siteHeader">
     <a href="#top" class="brand">Azadi<span>.</span>2026</a>
     <nav class="site">
-      <a href="#story">Story</a>
-      <a href="#timeline">Timeline</a>
-      <a href="#heroes">Heroes</a>
-      <a href="#tricolor">Tricolor</a>
-      <a href="#wishwall">Wishes</a>
-      <a href="#code">Flag Code</a>
+      <a href="#story" data-i18n="navStory">Story</a>
+      <a href="#timeline" data-i18n="navTimeline">Timeline</a>
+      <a href="#heroes" data-i18n="navHeroes">Heroes</a>
+      <a href="#tricolor" data-i18n="navTricolor">Tricolor</a>
+      <a href="#wishwall" data-i18n="navWishes">Wishes</a>
+      <a href="#code" data-i18n="navCode">Flag Code</a>
     </nav>
-    <div class="creator-badge">By Shadab Farooqui</div>
+    <div class="creator-badge" data-i18n="creatorBadge">By Shadab Farooqui</div>
+    <div class="lang-switch" id="langSwitch" role="group" aria-label="Language switch">
+      <button type="button" class="lang-btn active" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" class="lang-btn" data-lang="hi" aria-pressed="false">हिं</button>
+    </div>
   </header>
 
   <main id="top">
     <section class="hero">
       <div class="chakra-wrap" aria-hidden="true" id="heroChakra"></div>
       <div class="hero-inner">
-        <span class="eyebrow">15 August 2026 · Independence Day</span>
-        <h1>80 years of <em>Azadi</em></h1>
-        <p class="hero-sub">On the stroke of midnight, 15 August 1947, India stepped out of two centuries of colonial rule and into self-rule. Eight decades on, the tricolour still rises for that same promise.</p>
+        <span class="eyebrow" data-i18n="heroEyebrow">15 August 2026 · Independence Day</span>
+        <h1 id="heroTitle">80 years of <em>Azadi</em></h1>
+        <p class="hero-sub" data-i18n="heroSub">On the stroke of midnight, 15 August 1947, India stepped out of two centuries of colonial rule and into self-rule. Eight decades on, the tricolour still rises for that same promise.</p>
         <div class="hero-date">80th Independence Day · स्वतंत्रता दिवस</div>
-        <div class="creator-hero">Curated with pride by <strong>Shadab Farooqui</strong></div>
+        <div class="creator-hero"><span data-i18n="curatedBy">Curated with pride by</span> <strong>Shadab Farooqui</strong></div>
       </div>
-      <div class="scroll-cue">Scroll to hoist ↓</div>
+      <div class="scroll-cue" data-i18n="scrollCue">Scroll to hoist ↓</div>
     </section>
 
     <div class="fort-visual reveal">
@@ -485,8 +511,8 @@
         <div class="fort-overlay"></div>
       </div>
       <div class="fort-caption">
-        <span>Red Fort, Delhi — 15 August 1947</span>
-        <span>Historical Photograph · Jawaharlal Nehru's first address</span>
+        <span data-i18n="fortCaption1">Red Fort, Delhi — 15 August 1947</span>
+        <span data-i18n="fortCaption2">Historical Photograph · Jawaharlal Nehru's first address</span>
       </div>
     </div>
 
@@ -494,13 +520,13 @@
       <div class="wrap">
         <div class="why-grid">
           <div class="reveal">
-            <div class="big-num">1947<small>The year the flag first rose over free India</small></div>
+            <div class="big-num">1947<small data-i18n="bigNumCaption">The year the flag first rose over free India</small></div>
           </div>
           <div class="reveal">
-            <span class="eyebrow">Why we celebrate</span>
-            <h2>A midnight built on a century of struggle</h2>
-            <p>Independence Day marks the end of nearly 200 years of British colonial rule in India and the birth of a sovereign nation. It commemorates not one event but generations of resistance — mass movements, quiet defiance, and the work of framing a republic that would govern itself.</p>
-            <p>Each year on 15 August, the Prime Minister hoists the national flag at the Red Fort in Delhi and addresses the nation, a tradition that has continued since 1947.</p>
+            <span class="eyebrow" data-i18n="storyEyebrow">Why we celebrate</span>
+            <h2 data-i18n="storyH2">A midnight built on a century of struggle</h2>
+            <p data-i18n="storyP1">Independence Day marks the end of nearly 200 years of British colonial rule in India and the birth of a sovereign nation. It commemorates not one event but generations of resistance — mass movements, quiet defiance, and the work of framing a republic that would govern itself.</p>
+            <p data-i18n="storyP2">Each year on 15 August, the Prime Minister hoists the national flag at the Red Fort in Delhi and addresses the nation, a tradition that has continued since 1947.</p>
           </div>
         </div>
       </div>
@@ -509,33 +535,33 @@
     <section id="timeline" class="timeline">
       <div class="wrap">
         <div class="section-head reveal">
-          <span class="eyebrow">The road to freedom</span>
-          <h2>Ninety years, in six turns</h2>
+          <span class="eyebrow" data-i18n="tlEyebrow">The road to freedom</span>
+          <h2 data-i18n="tlH2">Ninety years, in six turns</h2>
         </div>
         <div class="tl-list">
           <div class="tl-item reveal">
             <div class="tl-year">1857</div>
-            <div><h3>The first major uprising</h3><p>Widespread revolt against East India Company rule spreads across northern and central India, marking the first large-scale challenge to colonial authority. Begum Hazrat Mahal led the revolt in Awadh.</p></div>
+            <div><h3 data-i18n="tl1857h">The first major uprising</h3><p data-i18n="tl1857p">Widespread revolt against East India Company rule spreads across northern and central India, marking the first large-scale challenge to colonial authority. Begum Hazrat Mahal led the revolt in Awadh.</p></div>
           </div>
           <div class="tl-item reveal">
             <div class="tl-year">1885</div>
-            <div><h3>Indian National Congress founded</h3><p>The Congress forms as a political platform for Indians to voice demands for greater self-governance, later becoming the vehicle of the independence movement.</p></div>
+            <div><h3 data-i18n="tl1885h">Indian National Congress founded</h3><p data-i18n="tl1885p">The Congress forms as a political platform for Indians to voice demands for greater self-governance, later becoming the vehicle of the independence movement.</p></div>
           </div>
           <div class="tl-item reveal">
             <div class="tl-year">1919</div>
-            <div><h3>Jallianwala Bagh</h3><p>Troops open fire on an unarmed gathering in Amritsar, killing hundreds. The massacre hardens public opinion and fuels the non-cooperation movement that follows.</p></div>
+            <div><h3 data-i18n="tl1919h">Jallianwala Bagh</h3><p data-i18n="tl1919p">Troops open fire on an unarmed gathering in Amritsar, killing hundreds. The massacre hardens public opinion and fuels the non-cooperation movement that follows.</p></div>
           </div>
           <div class="tl-item reveal">
             <div class="tl-year">1930</div>
-            <div><h3>The Salt March</h3><p>Mahatma Gandhi leads a 24-day march to the coast at Dandi to defy the salt tax, turning civil disobedience into a mass movement.</p></div>
+            <div><h3 data-i18n="tl1930h">The Salt March</h3><p data-i18n="tl1930p">Mahatma Gandhi leads a 24-day march to the coast at Dandi to defy the salt tax, turning civil disobedience into a mass movement.</p></div>
           </div>
           <div class="tl-item reveal">
             <div class="tl-year">1942</div>
-            <div><h3>Quit India</h3><p>The Congress launches a call for an immediate end to British rule, sparking nationwide protests and mass arrests of its leadership. Maulana Abul Kalam Azad was a key voice in this movement.</p></div>
+            <div><h3 data-i18n="tl1942h">Quit India</h3><p data-i18n="tl1942p">The Congress launches a call for an immediate end to British rule, sparking nationwide protests and mass arrests of its leadership. Maulana Abul Kalam Azad was a key voice in this movement.</p></div>
           </div>
           <div class="tl-item reveal">
             <div class="tl-year">1947</div>
-            <div><h3>Midnight, 15 August</h3><p>India becomes a sovereign nation. Jawaharlal Nehru is sworn in as the first Prime Minister, and the tricolour is hoisted at the Red Fort for the first time.</p></div>
+            <div><h3 data-i18n="tl1947h">Midnight, 15 August</h3><p data-i18n="tl1947p">India becomes a sovereign nation. Jawaharlal Nehru is sworn in as the first Prime Minister, and the tricolour is hoisted at the Red Fort for the first time.</p></div>
           </div>
         </div>
       </div>
@@ -544,114 +570,114 @@
     <section id="heroes">
       <div class="wrap reveal">
         <div class="section-head">
-          <span class="eyebrow">Meet our heroes</span>
-          <h2>The people who won it</h2>
-          <p>Tap a card to read about each freedom fighter — Hindus, Muslims, Sikhs and people of all faiths who fought together for one India.</p>
+          <span class="eyebrow" data-i18n="heroesEyebrow">Meet our heroes</span>
+          <h2 data-i18n="heroesH2">The people who won it</h2>
+          <p data-i18n="heroesP">Tap a card to read about each freedom fighter — Hindus, Muslims, Sikhs and people of all faiths who fought together for one India.</p>
         </div>
         <div class="heroes-grid">
           <div class="hero-card">
             <div class="hero-photo-wrap">
               <img class="hero-photo" src="https://kimi-web-img.kimi.ai/img/m.media-amazon.com/902db279377a845836ef480a46828b11bd765e94.jpg" alt="Mahatma Gandhi">
             </div>
-            <h3>Mahatma Gandhi</h3>
-            <span class="role">Non-violent resistance</span>
-            <button class="hero-toggle" aria-expanded="false">Learn more</button>
-            <div class="hero-bio"><p>Led the Salt March and the Quit India Movement, shaping satyagraha — non-violent civil disobedience — as a tool for national resistance. His philosophy of truth and non-violence inspired the world.</p></div>
+            <h3 data-i18n="h1name">Mahatma Gandhi</h3>
+            <span class="role" data-i18n="h1role">Non-violent resistance</span>
+            <button class="hero-toggle" aria-expanded="false" data-i18n="learnMore">Learn more</button>
+            <div class="hero-bio"><p data-i18n="h1bio">Led the Salt March and the Quit India Movement, shaping satyagraha — non-violent civil disobedience — as a tool for national resistance. His philosophy of truth and non-violence inspired the world.</p></div>
           </div>
 
           <div class="hero-card">
             <div class="hero-photo-wrap">
               <img class="hero-photo" src="https://kimi-web-img.kimi.ai/img/rukminim3.flixcart.com/73c31a1eb85df830658e49788954b89eaa7502cc.jpeg" alt="Bhagat Singh">
             </div>
-            <h3>Bhagat Singh</h3>
-            <span class="role">Revolutionary</span>
-            <button class="hero-toggle" aria-expanded="false">Learn more</button>
-            <div class="hero-bio"><p>A young revolutionary whose defiance and execution at age 23 turned him into a lasting symbol of fearless sacrifice for the motherland.</p></div>
+            <h3 data-i18n="h2name">Bhagat Singh</h3>
+            <span class="role" data-i18n="h2role">Revolutionary</span>
+            <button class="hero-toggle" aria-expanded="false" data-i18n="learnMore">Learn more</button>
+            <div class="hero-bio"><p data-i18n="h2bio">A young revolutionary whose defiance and execution at age 23 turned him into a lasting symbol of fearless sacrifice for the motherland.</p></div>
           </div>
 
           <div class="hero-card">
             <div class="hero-photo-wrap">
               <img class="hero-photo" src="https://kimi-web-img.kimi.ai/img/blogger.googleusercontent.com/09c1d52d73bbc6da845d22e1a85bf4760111151f.jpg" alt="Subhas Chandra Bose">
             </div>
-            <h3>Subhas Chandra Bose</h3>
-            <span class="role">Indian National Army</span>
-            <button class="hero-toggle" aria-expanded="false">Learn more</button>
-            <div class="hero-bio"><p>Founded the Azad Hind government-in-exile and led the Indian National Army in the armed struggle for independence. Gave the nation the slogan "Jai Hind."</p></div>
+            <h3 data-i18n="h3name">Subhas Chandra Bose</h3>
+            <span class="role" data-i18n="h3role">Indian National Army</span>
+            <button class="hero-toggle" aria-expanded="false" data-i18n="learnMore">Learn more</button>
+            <div class="hero-bio"><p data-i18n="h3bio">Founded the Azad Hind government-in-exile and led the Indian National Army in the armed struggle for independence. Gave the nation the slogan "Jai Hind."</p></div>
           </div>
 
           <div class="hero-card">
             <div class="hero-photo-wrap">
               <img class="hero-photo" src="https://kimi-web-img.kimi.ai/img/media.gettyimages.com/42d30a3ca5197b58f79ad8599f5a5b3a8a10bcd1.jpg" alt="Sarojini Naidu">
             </div>
-            <h3>Sarojini Naidu</h3>
-            <span class="role">Poet & freedom fighter</span>
-            <button class="hero-toggle" aria-expanded="false">Learn more</button>
-            <div class="hero-bio"><p>A poet and orator who became a leading voice of the movement and, in 1947, the first woman governor of an Indian state. Known as the "Nightingale of India."</p></div>
+            <h3 data-i18n="h4name">Sarojini Naidu</h3>
+            <span class="role" data-i18n="h4role">Poet &amp; freedom fighter</span>
+            <button class="hero-toggle" aria-expanded="false" data-i18n="learnMore">Learn more</button>
+            <div class="hero-bio"><p data-i18n="h4bio">A poet and orator who became a leading voice of the movement and, in 1947, the first woman governor of an Indian state. Known as the "Nightingale of India."</p></div>
           </div>
 
           <div class="hero-card">
             <div class="hero-photo-wrap">
               <img class="hero-photo" src="https://kimi-web-img.kimi.ai/img/i0.wp.com/4f4e114039b4ce2ea01656632546b885851ef6e5.jpg" alt="Jawaharlal Nehru">
             </div>
-            <h3>Jawaharlal Nehru</h3>
-            <span class="role">First Prime Minister</span>
-            <button class="hero-toggle" aria-expanded="false">Learn more</button>
-            <div class="hero-bio"><p>Delivered the iconic "Tryst with Destiny" speech on the midnight of independence. As India's first PM, he laid the foundations of a modern, secular republic.</p></div>
+            <h3 data-i18n="h5name">Jawaharlal Nehru</h3>
+            <span class="role" data-i18n="h5role">First Prime Minister</span>
+            <button class="hero-toggle" aria-expanded="false" data-i18n="learnMore">Learn more</button>
+            <div class="hero-bio"><p data-i18n="h5bio">Delivered the iconic "Tryst with Destiny" speech on the midnight of independence. As India's first PM, he laid the foundations of a modern, secular republic.</p></div>
           </div>
 
           <div class="hero-card">
             <div class="hero-photo-wrap">
               <img class="hero-photo" src="https://kimi-web-img.kimi.ai/img/upload.wikimedia.org/b10dfa3841d87e56392bf90bea53dba10deedc9e.jpg" alt="Rani Lakshmibai">
             </div>
-            <h3>Rani Lakshmibai</h3>
-            <span class="role">Queen of Jhansi</span>
-            <button class="hero-toggle" aria-expanded="false">Learn more</button>
-            <div class="hero-bio"><p>The Queen of Jhansi who led her army against the British during the 1857 uprising, becoming a timeless symbol of resistance, courage and women's leadership.</p></div>
+            <h3 data-i18n="h6name">Rani Lakshmibai</h3>
+            <span class="role" data-i18n="h6role">Queen of Jhansi</span>
+            <button class="hero-toggle" aria-expanded="false" data-i18n="learnMore">Learn more</button>
+            <div class="hero-bio"><p data-i18n="h6bio">The Queen of Jhansi who led her army against the British during the 1857 uprising, becoming a timeless symbol of resistance, courage and women's leadership.</p></div>
           </div>
 
           <div class="hero-card">
             <div class="hero-photo-wrap">
               <img class="hero-photo" src="https://kimi-web-img.kimi.ai/img/sc0.blr1.cdn.digitaloceanspaces.com/5ebfc5752de72947cb1de7f0e68a94b6fc0408c9.jpg" alt="Tipu Sultan">
             </div>
-            <h3>Tipu Sultan</h3>
-            <span class="role">Tiger of Mysore</span>
-            <button class="hero-toggle" aria-expanded="false">Learn more</button>
-            <div class="hero-bio"><p>The 18th-century ruler of Mysore who fought four Anglo-Mysore Wars against the British. He pioneered rocket artillery and refused to submit to colonial expansion.</p></div>
+            <h3 data-i18n="h7name">Tipu Sultan</h3>
+            <span class="role" data-i18n="h7role">Tiger of Mysore</span>
+            <button class="hero-toggle" aria-expanded="false" data-i18n="learnMore">Learn more</button>
+            <div class="hero-bio"><p data-i18n="h7bio">The 18th-century ruler of Mysore who fought four Anglo-Mysore Wars against the British. He pioneered rocket artillery and refused to submit to colonial expansion.</p></div>
           </div>
 
           <div class="hero-card">
             <div class="hero-photo-wrap">
               <img class="hero-photo" src="https://kimi-web-img.kimi.ai/img/cdn.britannica.com/fa48409954dced0f0d09c0e1b603568f61ab8d6c.jpg" alt="Maulana Abul Kalam Azad">
             </div>
-            <h3>Maulana Abul Kalam Azad</h3>
-            <span class="role">Scholar & Statesman</span>
-            <button class="hero-toggle" aria-expanded="false">Learn more</button>
-            <div class="hero-bio"><p>India's first Education Minister and the youngest Congress president. A scholar who advocated Hindu-Muslim unity, opposed Partition, and shaped India's education policy.</p></div>
+            <h3 data-i18n="h8name">Maulana Abul Kalam Azad</h3>
+            <span class="role" data-i18n="h8role">Scholar &amp; Statesman</span>
+            <button class="hero-toggle" aria-expanded="false" data-i18n="learnMore">Learn more</button>
+            <div class="hero-bio"><p data-i18n="h8bio">India's first Education Minister and the youngest Congress president. A scholar who advocated Hindu-Muslim unity, opposed Partition, and shaped India's education policy.</p></div>
           </div>
 
           <div class="hero-card">
             <div class="hero-photo-wrap">
               <img class="hero-photo" src="https://kimi-web-img.kimi.ai/img/vault.drishticuet.com/a9cfde5e7176bdb04abeca0f739418156d45c2d6.jpg" alt="Ashfaqulla Khan">
             </div>
-            <h3>Ashfaqulla Khan</h3>
-            <span class="role">Revolutionary Poet</span>
-            <button class="hero-toggle" aria-expanded="false">Learn more</button>
-            <div class="hero-bio"><p>A revolutionary of the Kakori train conspiracy and a poet who dreamed of a free India. Hanged by the British at age 27, he remains a symbol of Muslim contribution to the freedom struggle.</p></div>
+            <h3 data-i18n="h9name">Ashfaqulla Khan</h3>
+            <span class="role" data-i18n="h9role">Revolutionary Poet</span>
+            <button class="hero-toggle" aria-expanded="false" data-i18n="learnMore">Learn more</button>
+            <div class="hero-bio"><p data-i18n="h9bio">A revolutionary of the Kakori train conspiracy and a poet who dreamed of a free India. Hanged by the British at age 27, he remains a symbol of Muslim contribution to the freedom struggle.</p></div>
           </div>
 
           <div class="hero-card">
             <div class="hero-photo-wrap">
               <img class="hero-photo" src="https://kimi-web-img.kimi.ai/img/archive.siasat.com/1f4d907ff0dbb3ada5e4f4af649d8a94011263fe.jpg" alt="Begum Hazrat Mahal">
             </div>
-            <h3>Begum Hazrat Mahal</h3>
-            <span class="role">Leader of 1857</span>
-            <button class="hero-toggle" aria-expanded="false">Learn more</button>
-            <div class="hero-bio"><p>Led the 1857 revolt in Awadh after her husband was exiled. She rallied forces against the British, refused all compromises, and symbolised women's leadership in the first war of independence.</p></div>
+            <h3 data-i18n="h10name">Begum Hazrat Mahal</h3>
+            <span class="role" data-i18n="h10role">Leader of 1857</span>
+            <button class="hero-toggle" aria-expanded="false" data-i18n="learnMore">Learn more</button>
+            <div class="hero-bio"><p data-i18n="h10bio">Led the 1857 revolt in Awadh after her husband was exiled. She rallied forces against the British, refused all compromises, and symbolised women's leadership in the first war of independence.</p></div>
           </div>
         </div>
 
         <div class="unity-note reveal">
-          <p>"I am proud of being an Indian. I am part of the indivisible unity that is Indian nationality. No man can divide what God has united."</p>
+          <p data-i18n="unityQuote">"I am proud of being an Indian. I am part of the indivisible unity that is Indian nationality. No man can divide what God has united."</p>
           <span class="attribution">— Maulana Abul Kalam Azad</span>
         </div>
       </div>
@@ -660,25 +686,25 @@
     <section id="tricolor">
       <div class="wrap reveal">
         <div class="section-head">
-          <span class="eyebrow">The flag</span>
-          <h2>What every band of the Tiranga means</h2>
+          <span class="eyebrow" data-i18n="flagEyebrow">The flag</span>
+          <h2 data-i18n="flagH2">What every band of the Tiranga means</h2>
         </div>
       </div>
       <div class="flag-meaning">
         <div class="stripe saffron reveal">
-          <h3>Saffron</h3>
-          <p>Represents courage, sacrifice and the spirit of renunciation shown by the country's freedom fighters — from Tipu Sultan's wars to the Quit India Movement.</p>
+          <h3 data-i18n="saffronH">Saffron</h3>
+          <p data-i18n="saffronP">Represents courage, sacrifice and the spirit of renunciation shown by the country's freedom fighters — from Tipu Sultan's wars to the Quit India Movement.</p>
         </div>
         <div class="stripe white reveal">
           <div class="chakra-mini" id="stripeChakra"></div>
           <div>
-            <h3>White &amp; the Ashoka Chakra</h3>
-            <p>White stands for truth and peace. At its centre, a navy-blue wheel of 24 spokes — the Ashoka Chakra — represents the eternal wheel of law, taken from the Lion Capital at Sarnath.</p>
+            <h3 data-i18n="whiteH">White &amp; the Ashoka Chakra</h3>
+            <p data-i18n="whiteP">White stands for truth and peace. At its centre, a navy-blue wheel of 24 spokes — the Ashoka Chakra — represents the eternal wheel of law, taken from the Lion Capital at Sarnath.</p>
           </div>
         </div>
         <div class="stripe green reveal">
-          <h3>Green</h3>
-          <p>Signifies the land's fertility, growth and prosperity — the promise of a nation that continues to grow 80 years after freedom.</p>
+          <h3 data-i18n="greenH">Green</h3>
+          <p data-i18n="greenP">Signifies the land's fertility, growth and prosperity — the promise of a nation that continues to grow 80 years after freedom.</p>
         </div>
       </div>
     </section>
@@ -686,36 +712,36 @@
     <section id="symbols">
       <div class="wrap reveal">
         <div class="section-head">
-          <span class="eyebrow">National symbols</span>
-          <h2>Emblems of the republic</h2>
+          <span class="eyebrow" data-i18n="symbolsEyebrow">National symbols</span>
+          <h2 data-i18n="symbolsH2">Emblems of the republic</h2>
         </div>
       </div>
       <div class="symbols-grid reveal">
-        <div class="sym-card"><span class="eyebrow">Anthem</span><h3>Jana Gana Mana</h3><p>Written by Rabindranath Tagore; adopted as the national anthem in 1950.</p></div>
-        <div class="sym-card"><span class="eyebrow">National song</span><h3>Vande Mataram</h3><p>Composed by Bankim Chandra Chattopadhyay, a rallying song of the independence movement.</p></div>
-        <div class="sym-card"><span class="eyebrow">Emblem</span><h3>Lion Capital of Ashoka</h3><p>Adapted from the Sarnath pillar; adopted as the state emblem in 1950.</p></div>
-        <div class="sym-card"><span class="eyebrow">National flower</span><h3>Lotus</h3><p>Symbolises purity and resilience, rising unstained from murky water.</p></div>
-        <div class="sym-card"><span class="eyebrow">National bird</span><h3>Indian Peacock</h3><p>Known for its grace and colour, declared the national bird in 1963.</p></div>
-        <div class="sym-card"><span class="eyebrow">National animal</span><h3>Royal Bengal Tiger</h3><p>Chosen for its strength and majesty; also the anchor species of India's tiger reserves.</p></div>
+        <div class="sym-card"><span class="eyebrow" data-i18n="sym1e">Anthem</span><h3 data-i18n="sym1h">Jana Gana Mana</h3><p data-i18n="sym1p">Written by Rabindranath Tagore; adopted as the national anthem in 1950.</p></div>
+        <div class="sym-card"><span class="eyebrow" data-i18n="sym2e">National song</span><h3 data-i18n="sym2h">Vande Mataram</h3><p data-i18n="sym2p">Composed by Bankim Chandra Chattopadhyay, a rallying song of the independence movement.</p></div>
+        <div class="sym-card"><span class="eyebrow" data-i18n="sym3e">Emblem</span><h3 data-i18n="sym3h">Lion Capital of Ashoka</h3><p data-i18n="sym3p">Adapted from the Sarnath pillar; adopted as the state emblem in 1950.</p></div>
+        <div class="sym-card"><span class="eyebrow" data-i18n="sym4e">National flower</span><h3 data-i18n="sym4h">Lotus</h3><p data-i18n="sym4p">Symbolises purity and resilience, rising unstained from murky water.</p></div>
+        <div class="sym-card"><span class="eyebrow" data-i18n="sym5e">National bird</span><h3 data-i18n="sym5h">Indian Peacock</h3><p data-i18n="sym5p">Known for its grace and colour, declared the national bird in 1963.</p></div>
+        <div class="sym-card"><span class="eyebrow" data-i18n="sym6e">National animal</span><h3 data-i18n="sym6h">Royal Bengal Tiger</h3><p data-i18n="sym6p">Chosen for its strength and majesty; also the anchor species of India's tiger reserves.</p></div>
       </div>
     </section>
 
     <section id="wishwall" class="wishwall">
       <div class="wrap">
         <div class="section-head reveal" style="margin-left:auto;margin-right:auto;text-align:center;">
-          <span class="eyebrow">My wish for India</span>
-          <h2>Pin a wish on the wall</h2>
-          <p>Add a short note — it stays right here on the page for your session.</p>
+          <span class="eyebrow" data-i18n="wishEyebrow">My wish for India</span>
+          <h2 data-i18n="wishH2">Pin a wish on the wall</h2>
+          <p data-i18n="wishP">Add a short note — it stays right here on the page for your session.</p>
         </div>
         <form class="wish-form reveal" id="wishForm">
-          <input type="text" id="wishInput" maxlength="90" placeholder="Write a short wish for India…" aria-label="Your wish for India" required>
-          <button type="submit">Pin it</button>
+          <input type="text" id="wishInput" maxlength="90" data-i18n-placeholder="wishPlaceholder" placeholder="Write a short wish for India…" aria-label="Your wish for India" required>
+          <button type="submit" data-i18n="wishBtn">Pin it</button>
         </form>
         <div class="notes-board reveal" id="notesBoard">
-          <div class="note c1"><span>— Aisha</span>May every child grow up with equal opportunity.</div>
-          <div class="note c2"><span>— Rahul</span>Cleaner rivers, cleaner air, for the next 80 years.</div>
-          <div class="note c3"><span>— Meera</span>A country where every voice is heard.</div>
-          <div class="note c4"><span>— Karan</span>Unity in every language, every state.</div>
+          <div class="note c1"><span class="note-author">— Aisha</span><span class="note-text" data-i18n="note1">May every child grow up with equal opportunity.</span></div>
+          <div class="note c2"><span class="note-author">— Rahul</span><span class="note-text" data-i18n="note2">Cleaner rivers, cleaner air, for the next 80 years.</span></div>
+          <div class="note c3"><span class="note-author">— Meera</span><span class="note-text" data-i18n="note3">A country where every voice is heard.</span></div>
+          <div class="note c4"><span class="note-author">— Karan</span><span class="note-text" data-i18n="note4">Unity in every language, every state.</span></div>
         </div>
       </div>
     </section>
@@ -724,41 +750,211 @@
       <div class="wrap">
         <div class="why-grid">
           <div class="section-head reveal" style="margin-bottom:0;">
-            <span class="eyebrow">Flying it right</span>
-            <h2>The Flag Code, in short</h2>
-            <p>Since 2002, every citizen has the right to fly the national flag with dignity, within a few simple rules.</p>
+            <span class="eyebrow" data-i18n="codeEyebrow">Flying it right</span>
+            <h2 data-i18n="codeH2">The Flag Code, in short</h2>
+            <p data-i18n="codeP">Since 2002, every citizen has the right to fly the national flag with dignity, within a few simple rules.</p>
           </div>
           <ul class="code-list reveal">
-            <li><span class="code-mark">1</span><span>Hoist it saffron-side up — the flag must never be flown upside down.</span></li>
-            <li><span class="code-mark">2</span><span>Keep it clean and whole; a torn or soiled flag should not be flown.</span></li>
-            <li><span class="code-mark">3</span><span>Never let it touch the ground or water beneath it.</span></li>
-            <li><span class="code-mark">4</span><span>It may be flown day and night if properly illuminated.</span></li>
-            <li><span class="code-mark">5</span><span>When retired, it should be disposed of privately and with dignity.</span></li>
+            <li><span class="code-mark">1</span><span data-i18n="code1">Hoist it saffron-side up — the flag must never be flown upside down.</span></li>
+            <li><span class="code-mark">2</span><span data-i18n="code2">Keep it clean and whole; a torn or soiled flag should not be flown.</span></li>
+            <li><span class="code-mark">3</span><span data-i18n="code3">Never let it touch the ground or water beneath it.</span></li>
+            <li><span class="code-mark">4</span><span data-i18n="code4">It may be flown day and night if properly illuminated.</span></li>
+            <li><span class="code-mark">5</span><span data-i18n="code5">When retired, it should be disposed of privately and with dignity.</span></li>
           </ul>
         </div>
       </div>
     </section>
 
     <section class="cta">
-      <span class="eyebrow">Jai Hind</span>
-      <h2>Wherever you are on 15 August, take a moment to raise it — even if it's just a hand over your heart.</h2>
-      <p class="cta-note">Eighty years in, the tricolour still means the same three things it always has: courage, peace, and the promise of growth.</p>
+      <span class="eyebrow" data-i18n="ctaEyebrow">Jai Hind</span>
+      <h2 data-i18n="ctaH2">Wherever you are on 15 August, take a moment to raise it — even if it's just a hand over your heart.</h2>
+      <p class="cta-note" data-i18n="ctaP">Eighty years in, the tricolour still means the same three things it always has: courage, peace, and the promise of growth.</p>
     </section>
   </main>
 
   <footer>
     <div class="foot-row">
       <a href="#top" class="brand">Azadi<span>.</span>2026</a>
-      <div>Independence Day · 15 August 2026</div>
+      <div data-i18n="footIndep">Independence Day · 15 August 2026</div>
     </div>
     <div class="creator-footer">
-      <p>Designed, Researched & Curated with respect for the Tricolour</p>
+      <p data-i18n="footDesigned">Designed, Researched &amp; Curated with respect for the Tricolour</p>
       <span class="name">Shadab Farooqui</span>
+      <div class="social-links">
+        <a href="https://www.linkedin.com/in/mohammad-shadab-550aab24b" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.15 1.45-2.15 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+        </a>
+        <a href="https://github.com/Mohammadshadab1" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <svg viewBox="0 0 24 24"><path d="M12 .5C5.73.5.75 5.48.75 11.75c0 5.02 3.26 9.28 7.78 10.78.57.1.78-.25.78-.55 0-.27-.01-1.16-.02-2.1-3.16.69-3.83-1.34-3.83-1.34-.52-1.31-1.26-1.66-1.26-1.66-1.03-.7.08-.69.08-.69 1.14.08 1.74 1.17 1.74 1.17 1.01 1.74 2.65 1.24 3.3.95.1-.73.4-1.24.72-1.53-2.52-.29-5.17-1.26-5.17-5.6 0-1.24.44-2.24 1.17-3.03-.12-.29-.51-1.45.11-3.02 0 0 .96-.31 3.14 1.16a10.9 10.9 0 0 1 5.72 0c2.18-1.47 3.14-1.16 3.14-1.16.62 1.57.23 2.73.11 3.02.73.79 1.17 1.79 1.17 3.03 0 4.35-2.65 5.31-5.18 5.59.41.35.77 1.04.77 2.1 0 1.52-.01 2.74-.01 3.11 0 .3.2.66.79.55A11.26 11.26 0 0 0 23.25 11.75C23.25 5.48 18.27.5 12 .5z"/></svg>
+        </a>
+        <a href="https://myportfoliowebsite-lyart.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="Portfolio website">
+          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm7.93 9h-3.1a15.6 15.6 0 0 0-1.15-5.3A8.03 8.03 0 0 1 19.93 11zM12 4.06c.9 1.2 1.94 3.19 2.28 6.94H9.72C10.06 7.25 11.1 5.26 12 4.06zM4.07 11a8.03 8.03 0 0 1 4.32-5.3A15.6 15.6 0 0 0 7.24 11H4.07zm0 2h3.17c.15 2.03.57 3.86 1.15 5.3A8.03 8.03 0 0 1 4.07 13zM12 19.94c-.9-1.2-1.94-3.19-2.28-6.94h4.56C13.94 16.75 12.9 18.74 12 19.94zM14.83 18.3c.58-1.44 1-3.27 1.15-5.3h3.1a8.03 8.03 0 0 1-4.25 5.3z"/></svg>
+        </a>
+      </div>
     </div>
-    <small>Made with respect for the Tricolour and those who won it. Jai Hind. 🇮🇳</small>
+    <small data-i18n="footSmall">Made with respect for the Tricolour and those who won it. Jai Hind. 🇮🇳</small>
   </footer>
 
 <script>
+  // ---- i18n: English / Hindi translations ----
+  const translations = {
+    en: {
+      navStory:'Story', navTimeline:'Timeline', navHeroes:'Heroes', navTricolor:'Tricolor', navWishes:'Wishes', navCode:'Flag Code',
+      creatorBadge:'By Shadab Farooqui',
+      heroEyebrow:'15 August 2026 · Independence Day',
+      heroTitle:'80 years of <em>Azadi</em>',
+      heroSub:"On the stroke of midnight, 15 August 1947, India stepped out of two centuries of colonial rule and into self-rule. Eight decades on, the tricolour still rises for that same promise.",
+      curatedBy:'Curated with pride by',
+      scrollCue:'Scroll to hoist ↓',
+      fortCaption1:'Red Fort, Delhi — 15 August 1947',
+      fortCaption2:"Historical Photograph · Jawaharlal Nehru's first address",
+      bigNumCaption:'The year the flag first rose over free India',
+      storyEyebrow:'Why we celebrate',
+      storyH2:'A midnight built on a century of struggle',
+      storyP1:'Independence Day marks the end of nearly 200 years of British colonial rule in India and the birth of a sovereign nation. It commemorates not one event but generations of resistance — mass movements, quiet defiance, and the work of framing a republic that would govern itself.',
+      storyP2:'Each year on 15 August, the Prime Minister hoists the national flag at the Red Fort in Delhi and addresses the nation, a tradition that has continued since 1947.',
+      tlEyebrow:'The road to freedom', tlH2:'Ninety years, in six turns',
+      tl1857h:'The first major uprising', tl1857p:'Widespread revolt against East India Company rule spreads across northern and central India, marking the first large-scale challenge to colonial authority. Begum Hazrat Mahal led the revolt in Awadh.',
+      tl1885h:'Indian National Congress founded', tl1885p:'The Congress forms as a political platform for Indians to voice demands for greater self-governance, later becoming the vehicle of the independence movement.',
+      tl1919h:'Jallianwala Bagh', tl1919p:'Troops open fire on an unarmed gathering in Amritsar, killing hundreds. The massacre hardens public opinion and fuels the non-cooperation movement that follows.',
+      tl1930h:'The Salt March', tl1930p:'Mahatma Gandhi leads a 24-day march to the coast at Dandi to defy the salt tax, turning civil disobedience into a mass movement.',
+      tl1942h:'Quit India', tl1942p:'The Congress launches a call for an immediate end to British rule, sparking nationwide protests and mass arrests of its leadership. Maulana Abul Kalam Azad was a key voice in this movement.',
+      tl1947h:'Midnight, 15 August', tl1947p:'India becomes a sovereign nation. Jawaharlal Nehru is sworn in as the first Prime Minister, and the tricolour is hoisted at the Red Fort for the first time.',
+      heroesEyebrow:'Meet our heroes', heroesH2:'The people who won it',
+      heroesP:'Tap a card to read about each freedom fighter — Hindus, Muslims, Sikhs and people of all faiths who fought together for one India.',
+      h1name:'Mahatma Gandhi', h1role:'Non-violent resistance', h1bio:'Led the Salt March and the Quit India Movement, shaping satyagraha — non-violent civil disobedience — as a tool for national resistance. His philosophy of truth and non-violence inspired the world.',
+      h2name:'Bhagat Singh', h2role:'Revolutionary', h2bio:'A young revolutionary whose defiance and execution at age 23 turned him into a lasting symbol of fearless sacrifice for the motherland.',
+      h3name:'Subhas Chandra Bose', h3role:'Indian National Army', h3bio:'Founded the Azad Hind government-in-exile and led the Indian National Army in the armed struggle for independence. Gave the nation the slogan "Jai Hind."',
+      h4name:'Sarojini Naidu', h4role:'Poet & freedom fighter', h4bio:'A poet and orator who became a leading voice of the movement and, in 1947, the first woman governor of an Indian state. Known as the "Nightingale of India."',
+      h5name:'Jawaharlal Nehru', h5role:'First Prime Minister', h5bio:'Delivered the iconic "Tryst with Destiny" speech on the midnight of independence. As India\'s first PM, he laid the foundations of a modern, secular republic.',
+      h6name:'Rani Lakshmibai', h6role:'Queen of Jhansi', h6bio:"The Queen of Jhansi who led her army against the British during the 1857 uprising, becoming a timeless symbol of resistance, courage and women's leadership.",
+      h7name:'Tipu Sultan', h7role:'Tiger of Mysore', h7bio:'The 18th-century ruler of Mysore who fought four Anglo-Mysore Wars against the British. He pioneered rocket artillery and refused to submit to colonial expansion.',
+      h8name:'Maulana Abul Kalam Azad', h8role:'Scholar & Statesman', h8bio:"India's first Education Minister and the youngest Congress president. A scholar who advocated Hindu-Muslim unity, opposed Partition, and shaped India's education policy.",
+      h9name:'Ashfaqulla Khan', h9role:'Revolutionary Poet', h9bio:'A revolutionary of the Kakori train conspiracy and a poet who dreamed of a free India. Hanged by the British at age 27, he remains a symbol of Muslim contribution to the freedom struggle.',
+      h10name:'Begum Hazrat Mahal', h10role:'Leader of 1857', h10bio:"Led the 1857 revolt in Awadh after her husband was exiled. She rallied forces against the British, refused all compromises, and symbolised women's leadership in the first war of independence.",
+      learnMore:'Learn more', showLess:'Show less',
+      unityQuote:'"I am proud of being an Indian. I am part of the indivisible unity that is Indian nationality. No man can divide what God has united."',
+      flagEyebrow:'The flag', flagH2:'What every band of the Tiranga means',
+      saffronH:'Saffron', saffronP:"Represents courage, sacrifice and the spirit of renunciation shown by the country's freedom fighters — from Tipu Sultan's wars to the Quit India Movement.",
+      whiteH:'White & the Ashoka Chakra', whiteP:'White stands for truth and peace. At its centre, a navy-blue wheel of 24 spokes — the Ashoka Chakra — represents the eternal wheel of law, taken from the Lion Capital at Sarnath.',
+      greenH:'Green', greenP:"Signifies the land's fertility, growth and prosperity — the promise of a nation that continues to grow 80 years after freedom.",
+      symbolsEyebrow:'National symbols', symbolsH2:'Emblems of the republic',
+      sym1e:'Anthem', sym1h:'Jana Gana Mana', sym1p:'Written by Rabindranath Tagore; adopted as the national anthem in 1950.',
+      sym2e:'National song', sym2h:'Vande Mataram', sym2p:'Composed by Bankim Chandra Chattopadhyay, a rallying song of the independence movement.',
+      sym3e:'Emblem', sym3h:'Lion Capital of Ashoka', sym3p:'Adapted from the Sarnath pillar; adopted as the state emblem in 1950.',
+      sym4e:'National flower', sym4h:'Lotus', sym4p:'Symbolises purity and resilience, rising unstained from murky water.',
+      sym5e:'National bird', sym5h:'Indian Peacock', sym5p:'Known for its grace and colour, declared the national bird in 1963.',
+      sym6e:'National animal', sym6h:'Royal Bengal Tiger', sym6p:"Chosen for its strength and majesty; also the anchor species of India's tiger reserves.",
+      wishEyebrow:'My wish for India', wishH2:'Pin a wish on the wall', wishP:'Add a short note — it stays right here on the page for your session.',
+      wishPlaceholder:'Write a short wish for India…', wishBtn:'Pin it',
+      note1:'May every child grow up with equal opportunity.', note2:'Cleaner rivers, cleaner air, for the next 80 years.',
+      note3:'A country where every voice is heard.', note4:'Unity in every language, every state.',
+      codeEyebrow:'Flying it right', codeH2:'The Flag Code, in short', codeP:'Since 2002, every citizen has the right to fly the national flag with dignity, within a few simple rules.',
+      code1:'Hoist it saffron-side up — the flag must never be flown upside down.', code2:'Keep it clean and whole; a torn or soiled flag should not be flown.',
+      code3:'Never let it touch the ground or water beneath it.', code4:'It may be flown day and night if properly illuminated.', code5:'When retired, it should be disposed of privately and with dignity.',
+      ctaEyebrow:'Jai Hind', ctaH2:"Wherever you are on 15 August, take a moment to raise it — even if it's just a hand over your heart.",
+      ctaP:'Eighty years in, the tricolour still means the same three things it always has: courage, peace, and the promise of growth.',
+      footIndep:'Independence Day · 15 August 2026', footDesigned:'Designed, Researched & Curated with respect for the Tricolour',
+      footSmall:'Made with respect for the Tricolour and those who won it. Jai Hind. 🇮🇳'
+    },
+    hi: {
+      navStory:'कहानी', navTimeline:'समयरेखा', navHeroes:'महानायक', navTricolor:'तिरंगा', navWishes:'शुभकामनाएँ', navCode:'ध्वज संहिता',
+      creatorBadge:'शादाब फारूकी द्वारा',
+      heroEyebrow:'15 अगस्त 2026 · स्वतंत्रता दिवस',
+      heroTitle:'आज़ादी के <em>80 वर्ष</em>',
+      heroSub:'15 अगस्त 1947 की आधी रात को, भारत दो शताब्दियों के औपनिवेशिक शासन से निकलकर स्वशासन में प्रवेश कर गया। आठ दशकों बाद भी, तिरंगा उसी वादे के लिए लहराता है।',
+      curatedBy:'गर्व के साथ प्रस्तुत —',
+      scrollCue:'ध्वजारोहण देखने हेतु स्क्रॉल करें ↓',
+      fortCaption1:'लाल किला, दिल्ली — 15 अगस्त 1947',
+      fortCaption2:'ऐतिहासिक तस्वीर · जवाहरलाल नेहरू का पहला संबोधन',
+      bigNumCaption:'वह वर्ष जब स्वतंत्र भारत पर पहली बार तिरंगा फहराया',
+      storyEyebrow:'हम क्यों मनाते हैं',
+      storyH2:'एक सदी के संघर्ष पर बनी वह आधी रात',
+      storyP1:'स्वतंत्रता दिवस भारत में लगभग 200 वर्षों के ब्रिटिश औपनिवेशिक शासन के अंत और एक संप्रभु राष्ट्र के जन्म का प्रतीक है। यह किसी एक घटना का नहीं, बल्कि पीढ़ियों के प्रतिरोध — जन आंदोलनों, मूक अवज्ञा, और स्वयं को शासित करने वाले गणराज्य को गढ़ने के कार्य — का उत्सव है।',
+      storyP2:'हर वर्ष 15 अगस्त को, प्रधानमंत्री दिल्ली के लाल किले पर राष्ट्रीय ध्वज फहराते हैं और राष्ट्र को संबोधित करते हैं, यह परंपरा 1947 से चली आ रही है।',
+      tlEyebrow:'आज़ादी का सफर', tlH2:'नब्बे वर्ष, छह मोड़ों में',
+      tl1857h:'पहला बड़ा विद्रोह', tl1857p:'ईस्ट इंडिया कंपनी के शासन के विरुद्ध व्यापक विद्रोह उत्तरी और मध्य भारत में फैल गया, जो औपनिवेशिक सत्ता को दी गई पहली बड़ी चुनौती थी। बेगम हज़रत महल ने अवध में इस विद्रोह का नेतृत्व किया।',
+      tl1885h:'भारतीय राष्ट्रीय कांग्रेस की स्थापना', tl1885p:'कांग्रेस भारतीयों के लिए अधिक स्वशासन की मांग रखने हेतु एक राजनीतिक मंच के रूप में बनी, जो बाद में स्वतंत्रता आंदोलन का प्रमुख वाहन बनी।',
+      tl1919h:'जलियाँवाला बाग', tl1919p:'अमृतसर में एक निहत्थी सभा पर सैनिकों ने गोलियां चलाईं, जिसमें सैकड़ों लोग मारे गए। इस नरसंहार ने जनमत को कठोर किया और उसके बाद के असहयोग आंदोलन को बल दिया।',
+      tl1930h:'नमक सत्याग्रह (दांडी मार्च)', tl1930p:'महात्मा गांधी ने नमक कर की अवहेलना के लिए दांडी तट तक 24-दिवसीय यात्रा का नेतृत्व किया, जिसने सविनय अवज्ञा को एक जन आंदोलन में बदल दिया।',
+      tl1942h:'भारत छोड़ो आंदोलन', tl1942p:'कांग्रेस ने ब्रिटिश शासन के तत्काल अंत का आह्वान किया, जिससे देशव्यापी विरोध प्रदर्शन और नेतृत्व की सामूहिक गिरफ्तारियां हुईं। मौलाना अबुल कलाम आज़ाद इस आंदोलन की एक प्रमुख आवाज़ थे।',
+      tl1947h:'15 अगस्त की आधी रात', tl1947p:'भारत एक संप्रभु राष्ट्र बना। जवाहरलाल नेहरू पहले प्रधानमंत्री के रूप में शपथ लेते हैं, और लाल किले पर पहली बार तिरंगा फहराया जाता है।',
+      heroesEyebrow:'हमारे नायकों से मिलिए', heroesH2:'वे लोग जिन्होंने इसे जीता',
+      heroesP:'हर स्वतंत्रता सेनानी के बारे में पढ़ने के लिए कार्ड पर टैप करें — हिंदू, मुस्लिम, सिख और सभी धर्मों के लोग जिन्होंने एक भारत के लिए साथ मिलकर संघर्ष किया।',
+      h1name:'महात्मा गांधी', h1role:'अहिंसक प्रतिरोध', h1bio:'नमक सत्याग्रह और भारत छोड़ो आंदोलन का नेतृत्व किया, और सत्याग्रह — अहिंसक सविनय अवज्ञा — को राष्ट्रीय प्रतिरोध का साधन बनाया। सत्य और अहिंसा के उनके दर्शन ने पूरी दुनिया को प्रेरित किया।',
+      h2name:'भगत सिंह', h2role:'क्रांतिकारी', h2bio:'एक युवा क्रांतिकारी जिनकी निडरता और मात्र 23 वर्ष की आयु में फांसी ने उन्हें मातृभूमि के लिए निर्भीक बलिदान का स्थायी प्रतीक बना दिया।',
+      h3name:'सुभाष चंद्र बोस', h3role:'आज़ाद हिंद फौज', h3bio:'आज़ाद हिंद निर्वासित सरकार की स्थापना की और स्वतंत्रता के सशस्त्र संघर्ष में आज़ाद हिंद फौज का नेतृत्व किया। राष्ट्र को "जय हिंद" का नारा दिया।',
+      h4name:'सरोजिनी नायडू', h4role:'कवयित्री एवं स्वतंत्रता सेनानी', h4bio:'एक कवयित्री और वक्ता जो आंदोलन की प्रमुख आवाज़ बनीं और 1947 में किसी भारतीय राज्य की पहली महिला राज्यपाल बनीं। "भारत कोकिला" के नाम से जानी जाती हैं।',
+      h5name:'जवाहरलाल नेहरू', h5role:'प्रथम प्रधानमंत्री', h5bio:'स्वतंत्रता की आधी रात को प्रसिद्ध "नियति से साक्षात्कार" भाषण दिया। भारत के पहले प्रधानमंत्री के रूप में उन्होंने एक आधुनिक, धर्मनिरपेक्ष गणराज्य की नींव रखी।',
+      h6name:'रानी लक्ष्मीबाई', h6role:'झांसी की रानी', h6bio:'झांसी की रानी जिन्होंने 1857 के विद्रोह के दौरान अंग्रेजों के विरुद्ध अपनी सेना का नेतृत्व किया और प्रतिरोध, साहस तथा महिला नेतृत्व की चिरस्थायी प्रतीक बनीं।',
+      h7name:'टीपू सुल्तान', h7role:'मैसूर के शेर', h7bio:'18वीं सदी के मैसूर शासक जिन्होंने अंग्रेजों के विरुद्ध चार आंग्ल-मैसूर युद्ध लड़े। उन्होंने रॉकेट तोपखाने का बीड़ा उठाया और औपनिवेशिक विस्तार के आगे झुकने से इनकार कर दिया।',
+      h8name:'मौलाना अबुल कलाम आज़ाद', h8role:'विद्वान एवं राजनेता', h8bio:'भारत के पहले शिक्षा मंत्री और कांग्रेस के सबसे युवा अध्यक्ष। एक विद्वान जिन्होंने हिंदू-मुस्लिम एकता की वकालत की, विभाजन का विरोध किया, और भारत की शिक्षा नीति को आकार दिया।',
+      h9name:'अशफ़ाकउल्ला खान', h9role:'क्रांतिकारी कवि', h9bio:'काकोरी ट्रेन षड्यंत्र के क्रांतिकारी और एक कवि जिन्होंने स्वतंत्र भारत का सपना देखा। मात्र 27 वर्ष की आयु में अंग्रेजों द्वारा फांसी दी गई, वे स्वतंत्रता संग्राम में मुस्लिम योगदान के प्रतीक हैं।',
+      h10name:'बेगम हज़रत महल', h10role:'1857 की नेता', h10bio:'अपने पति के निर्वासन के बाद अवध में 1857 के विद्रोह का नेतृत्व किया। उन्होंने अंग्रेजों के विरुद्ध सेनाएं संगठित कीं, हर समझौते से इनकार किया, और प्रथम स्वतंत्रता संग्राम में महिला नेतृत्व की प्रतीक बनीं।',
+      learnMore:'और जानें', showLess:'कम दिखाएं',
+      unityQuote:'"मुझे भारतीय होने पर गर्व है। मैं उस अविभाज्य एकता का हिस्सा हूं जो भारतीय राष्ट्रीयता है। जिसे ईश्वर ने जोड़ा है, उसे कोई विभाजित नहीं कर सकता।"',
+      flagEyebrow:'ध्वज', flagH2:'तिरंगे की हर पट्टी का क्या अर्थ है',
+      saffronH:'केसरिया', saffronP:'देश के स्वतंत्रता सेनानियों — टीपू सुल्तान के युद्धों से लेकर भारत छोड़ो आंदोलन तक — द्वारा दिखाए गए साहस, बलिदान और त्याग की भावना का प्रतीक है।',
+      whiteH:'सफेद और अशोक चक्र', whiteP:'सफेद रंग सत्य और शांति का प्रतीक है। इसके केंद्र में 24 तीलियों वाला गहरे नीले रंग का पहिया — अशोक चक्र — सारनाथ के सिंह स्तंभ से लिया गया, धर्म के शाश्वत चक्र का प्रतीक है।',
+      greenH:'हरा', greenP:'भूमि की उर्वरता, वृद्धि और समृद्धि का प्रतीक है — एक ऐसे राष्ट्र का वादा जो आज़ादी के 80 वर्षों बाद भी निरंतर आगे बढ़ रहा है।',
+      symbolsEyebrow:'राष्ट्रीय प्रतीक', symbolsH2:'गणराज्य के प्रतीक चिह्न',
+      sym1e:'राष्ट्रगान', sym1h:'जन गण मन', sym1p:'रवींद्रनाथ टैगोर द्वारा रचित; 1950 में राष्ट्रगान के रूप में अपनाया गया।',
+      sym2e:'राष्ट्रीय गीत', sym2h:'वंदे मातरम्', sym2p:'बंकिम चंद्र चट्टोपाध्याय द्वारा रचित, स्वतंत्रता आंदोलन का प्रेरक गीत।',
+      sym3e:'राजचिह्न', sym3h:'अशोक स्तंभ का सिंह शीर्ष', sym3p:'सारनाथ स्तंभ से अनुकूलित; 1950 में राजकीय चिह्न के रूप में अपनाया गया।',
+      sym4e:'राष्ट्रीय पुष्प', sym4h:'कमल', sym4p:'शुद्धता और लचीलेपन का प्रतीक, गंदे पानी से भी बेदाग खिलता है।',
+      sym5e:'राष्ट्रीय पक्षी', sym5h:'भारतीय मोर', sym5p:'अपनी सुंदरता और रंगों के लिए जाना जाता है, 1963 में राष्ट्रीय पक्षी घोषित।',
+      sym6e:'राष्ट्रीय पशु', sym6h:'रॉयल बंगाल टाइगर', sym6p:'अपनी शक्ति और भव्यता के लिए चुना गया; भारत के बाघ अभयारण्यों की मुख्य प्रजाति भी।',
+      wishEyebrow:'भारत के लिए मेरी शुभकामना', wishH2:'दीवार पर एक शुभकामना टांकें', wishP:'एक छोटा संदेश जोड़ें — यह आपके सत्र के दौरान यहीं इस पृष्ठ पर बना रहेगा।',
+      wishPlaceholder:'भारत के लिए एक छोटी शुभकामना लिखें…', wishBtn:'टांकें',
+      note1:'हर बच्चा समान अवसर के साथ बड़ा हो।', note2:'अगले 80 वर्षों के लिए स्वच्छ नदियां, स्वच्छ हवा।',
+      note3:'एक ऐसा देश जहां हर आवाज़ सुनी जाए।', note4:'हर भाषा, हर राज्य में एकता।',
+      codeEyebrow:'सही तरीके से फहराना', codeH2:'संक्षेप में ध्वज संहिता', codeP:'2002 से, हर नागरिक को कुछ सरल नियमों के भीतर गरिमा के साथ राष्ट्रीय ध्वज फहराने का अधिकार है।',
+      code1:'केसरिया रंग ऊपर की ओर फहराएं — ध्वज को कभी उल्टा नहीं फहराना चाहिए।', code2:'इसे साफ और अखंडित रखें; फटे या मैले ध्वज को नहीं फहराना चाहिए।',
+      code3:'इसे कभी भी ज़मीन या नीचे के पानी को नहीं छूने दें।', code4:'यदि उचित रूप से प्रकाशित हो तो इसे दिन-रात फहराया जा सकता है।', code5:'सेवामुक्त करते समय, इसे निजी तौर पर और गरिमा के साथ नष्ट किया जाना चाहिए।',
+      ctaEyebrow:'जय हिंद', ctaH2:'15 अगस्त को आप जहां भी हों, इसे फहराने के लिए एक पल निकालें — चाहे वह सिर्फ दिल पर हाथ रखना ही क्यों न हो।',
+      ctaP:'अस्सी वर्षों बाद भी, तिरंगा वही तीन बातें दर्शाता है जो वह हमेशा से दर्शाता आया है: साहस, शांति और विकास का वादा।',
+      footIndep:'स्वतंत्रता दिवस · 15 अगस्त 2026', footDesigned:'तिरंगे के सम्मान में डिज़ाइन, शोध एवं संकलन',
+      footSmall:'तिरंगे और उसे जीतने वालों के सम्मान में बनाया गया। जय हिंद। 🇮🇳'
+    }
+  };
+
+  let currentLang = 'en';
+  const langButtons = document.querySelectorAll('.lang-btn');
+  const heroTitleEl = document.getElementById('heroTitle');
+
+  function applyLanguage(lang){
+    currentLang = lang;
+    document.documentElement.lang = (lang === 'hi') ? 'hi' : 'en';
+    const dict = translations[lang];
+
+    document.querySelectorAll('[data-i18n]').forEach(el=>{
+      const key = el.getAttribute('data-i18n');
+      if(dict[key] !== undefined) el.textContent = dict[key];
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+      const key = el.getAttribute('data-i18n-placeholder');
+      if(dict[key] !== undefined) el.setAttribute('placeholder', dict[key]);
+    });
+    if(heroTitleEl) heroTitleEl.innerHTML = dict.heroTitle;
+
+    // Keep open hero-toggle buttons showing the correct label
+    document.querySelectorAll('.hero-card').forEach(card=>{
+      const btn = card.querySelector('.hero-toggle');
+      if(!btn) return;
+      btn.textContent = card.classList.contains('open') ? dict.showLess : dict.learnMore;
+    });
+
+    langButtons.forEach(b=>{
+      const active = b.getAttribute('data-lang') === lang;
+      b.classList.toggle('active', active);
+      b.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+  }
+
+  langButtons.forEach(btn=>{
+    btn.addEventListener('click', ()=> applyLanguage(btn.getAttribute('data-lang')));
+  });
+
   // ---- Build an accurate 24-spoke Ashoka Chakra as inline SVG, reused in two spots ----
   function chakraSVG(strokeColor, hubColor){
     const cx=100, cy=100, rOuter=92, rInner=70, spokes=24;
@@ -807,7 +1003,7 @@
       const card = btn.closest('.hero-card');
       const open = card.classList.toggle('open');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      btn.textContent = open ? 'Show less' : 'Learn more';
+      btn.textContent = open ? (translations[currentLang].showLess) : (translations[currentLang].learnMore);
     });
   });
 
@@ -823,10 +1019,14 @@
     const note = document.createElement('div');
     note.className = 'note ' + noteColors[Math.floor(Math.random()*noteColors.length)];
     note.style.transform = `rotate(${(Math.random()*4-2).toFixed(1)}deg)`;
-    const span = document.createElement('span');
-    span.textContent = '— You';
-    note.textContent = text + ' ';
-    note.appendChild(span);
+    const textSpan = document.createElement('span');
+    textSpan.className = 'note-text';
+    textSpan.textContent = text;
+    const authorSpan = document.createElement('span');
+    authorSpan.className = 'note-author';
+    authorSpan.textContent = currentLang === 'hi' ? '— आप' : '— You';
+    note.appendChild(textSpan);
+    note.appendChild(authorSpan);
     board.prepend(note);
     wishInput.value = '';
     wishInput.focus();
